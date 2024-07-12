@@ -175,94 +175,75 @@ from scipy.ndimage import convolve
 from scipy import ndimage
 import os
 
-# Define function to read image safely
 def safe_imread(filename):
     if not os.path.exists(filename):
         raise FileNotFoundError(f"File '{filename}' not found.")
     return cv2.imread(filename)
 
-# Define the Laplacian filter
 def laplacian_filter(img, alpha=0.05):
     kernel = np.array([[0, 1, 0], [1, -4 + alpha, 1], [0, 1, 0]])
     return convolve(img, kernel)
 
-# Main script
 try:
-    # Read the image
     i = safe_imread('/home/aids5a2-18/Desktop/img.jpg')
     
-    # Display the original image
     plt.subplot(4, 2, 1)
     plt.imshow(cv2.cvtColor(i, cv2.COLOR_BGR2RGB))
     plt.title('Original Image')
     plt.axis('off')
 
-    # Convert to grayscale
     g = cv2.cvtColor(i, cv2.COLOR_BGR2GRAY)
     
-    # Display the grayscale image
     plt.subplot(4, 2, 2)
     plt.imshow(g, cmap='gray')
     plt.title('Gray Image')
     plt.axis('off')
 
-    # Apply Laplacian filter
     f = laplacian_filter(g, alpha=0.05)
     
-    # Display the Laplacian filtered image
     plt.subplot(4, 2, 3)
     plt.imshow(f, cmap='gray')
     plt.title('Laplacian')
     plt.axis('off')
 
-    # Apply Sobel edge detection
     s = cv2.Sobel(g, cv2.CV_64F, 1, 0, ksize=3) + cv2.Sobel(g, cv2.CV_64F, 0, 1, ksize=3)
     
-    # Display the Sobel edge detected image
     plt.subplot(4, 2, 4)
     plt.imshow(s, cmap='gray')
     plt.title('Sobel')
     plt.axis('off')
 
-    # Apply Prewitt edge detection
     kernelx = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]])
     kernely = np.array([[1, 1, 1], [0, 0, 0], [-1, -1, -1]])
     px = convolve(g, kernelx)
     py = convolve(g, kernely)
     p = np.sqrt(px*2 + py*2)
     
-    # Display the Prewitt edge detected image
     plt.subplot(4, 2, 5)
     plt.imshow(p, cmap='gray')
     plt.title('Prewitt')
     plt.axis('off')
 
-    # Apply Roberts edge detection
     kernelx = np.array([[1, 0], [0, -1]])
     kernely = np.array([[0, 1], [-1, 0]])
     rx = convolve(g, kernelx)
     ry = convolve(g, kernely)
     r = np.sqrt(rx*2 + ry*2)
     
-    # Display the Roberts edge detected image
     plt.subplot(4, 2, 6)
     plt.imshow(r, cmap='gray')
     plt.title('Roberts')
     plt.axis('off')
 
-    # Apply Sobel edge detection (horizontal)
     sobel_horizontal = cv2.Sobel(g, cv2.CV_64F, 1, 0, ksize=3)
     
-    # Display the Sobel horizontal edge detected image
     plt.subplot(4, 2, 7)
     plt.imshow(sobel_horizontal, cmap='gray')
     plt.title('Sobel Horizontal')
     plt.axis('off')
 
-    # Apply Sobel edge detection (vertical)
     sobel_vertical = cv2.Sobel(g, cv2.CV_64F, 0, 1, ksize=3)
     
-    # Display the Sobel vertical edge detected image
     plt.subplot(4, 2, 8)
     plt.imshow(sobel_vertical, cmap='gray')
     plt.title('Sobel Vertical')
